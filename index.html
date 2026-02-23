@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANN</title>
+    <style>
+     html {
+        scroll-behavior: smooth;
+     }
+
+     body {
+         margin: 0;
+         background-color: #111;
+         color: white;
+         text-align: center;
+         font-family:Arial, Helvetica, sans-serif;
+     }
+
+    .btn {
+        display: inline-block;
+         background-color: #ff6600;
+         color:white;
+         padding: 12px 25px;
+         border-radius: 8px;
+         font-size: 16px;
+         transition: 0.3s;
+     }
+
+    .btn:hover {
+         background-color: #cc5200;
+         transform: scale(1.05);
+     }
+
+    .hero {
+        background-image: url("imagem/MANN.webp");
+        height: 100vh;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(8px);
+        padding: 50px;
+        border-radius: 12px;
+    } 
+
+    .sobre {
+        padding: 80px 20px;
+        background-color: #111;
+        color: white;
+        text-align:center;
+    }
+
+    .sobre h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+     }
+
+    .sobre p {
+        max-width: 600px;
+        margin: auto;
+        line-height: 1.6;
+        font-size: 18px;
+     }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .produtos {
+        padding: 80px 20px;
+        background-color: #181818;
+    }
+
+    .produtos h2 {
+        font-size: 32px;
+        margin-bottom: 40px;
+    }
+
+    .cards {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 12px;
+        width: 250px;
+        transition: 0.3s;
+    }
+    .card img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+    }
+
+    .buy-btn {
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        background-color: #ff6600;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .buy-btn:hover {
+        background-color: #cc5200;
+    }
+
+    .cart-icon {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff6600;
+        padding: 10px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        z-index: 1000;
+    }
+    
+    .cart-sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100vh;
+        background: #222;
+        padding: 20px;
+        transition: right 0.4s ease;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+        overflow-y: auto;
+    }
+
+    .cart-sidebar.active {
+        right: 0;
+    }
+
+    .cart-sidebar h2 {
+        margin-top: 0;
+    }
+
+    #clear-cart {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        background: crimson;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .cart-item {
+       background: #2a2a2a;
+       padding: 12px;
+       border-radius: 8px;
+       margin-bottom: 12px;
+    }
+
+    .cart-controls {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       margin-top: 8px;
+    }
+
+    .cart-controls button {
+       background: #ff6600;
+       border: none;
+       padding: 5px 10px;
+       border-radius: 6px;
+       color: white;
+       cursor: pointer;
+       transition: 0.2s;
+    }
+
+    .cart-controls button:hover {
+       transform: scale(1.1);
+       background: #ff8533;
+    }
+    @media (max-width: 768px) {
+
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 90%;
+    }
+
+    .overlay {
+        padding: 30px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .cart-sidebar {
+        width: 100%;
+    } 
+
+    }
+    body.cart-open {
+        overflow: hidden;
+    }
+
+    body.cart-open::after {
+       content: "";
+       position: fixed;
+       inset: 0;
+       background: rgba(0,0,0,0.6);
+       backdrop-filter: blur(5px);
+       z-index: 500;
+    }
+
+    #checkout-btn {
+       margin-top: 10px;
+       width: 100%;
+       padding: 12px;
+       background: #28a745;
+       border: none;
+       border-radius: 6px;
+       color: white;
+       cursor: pointer;
+       font-weight: bold;
+       transition: 0.3s;
+    }
+
+    #checkout-btn:hover {
+       background: #34d058;
+    }
+
+    .checkout-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.checkout-box {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkout-box input {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+}
+
+.checkout-box button {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+}
+    
+    </style>
+</head>
+<body>
+    <div class="cart-icon" onclick="toggleCart()">
+        <span id="cart-count">0</span>
+    </div>
+    
+    <div class="cart-sidebar" id="cart">
+        <h2>Seu Carrinho</h2>
+        <div id="cart-items"></div>
+        <p>Total: R$ <span id="cart-total">0.00</span></p>
+        <button id="clear-cart">Limpar Carrinho</button>
+        <button id="checkout-btn">Finalizar Compra</button>
+    </div>
+    
+    <div class="hero">
+        <div class="overlay">
+            <h1>MANN</h1>
+            <p>Meu primeiro site profissional</p>
+            <a href="#produtos" class="btn">Ver produtos</a>
+        </div>
+    </div>
+
+    <section class="produtos" id="produtos">
+        <h2>Nossos Produtos</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <img src="imagem/bermuda cargo.webp" alt="Produto 1">
+                <h3>Bermuda Cargo</h3>
+                <p>R$ 179,77</p>
+                <button class="buy-btn"
+                        data-name="BermudaCargo"
+                        data-price="179.77">
+                    Comprar
+                </button>
+            </div>
+
+            <div class="card">
+                <img src="imagem/CalçaCargo.jpg" alt="Produto 2">
+                <h3>Calça Denim Preta</h3>
+                <p>R$ 199,90</p>
+                <button class="buy-btn"
+                        data-name="CalçaCargo"
+                        data-price="199.90">
+                    Comprar
+                </button>
+            </div>
+
+            <div class="card">
+                <img src="imagem/Jaqueta.webp" alt="Produto 3">
+                <h3>Moletom Azul</h3>
+                <p>R$ 189,89</p>
+                <button class="buy-btn"
+                        data-name="Jaqueta"
+                        data-price="189.89">
+                    Comprar
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="sobre">
+        <h2>Sobre a Marca</h2>
+        <p>
+            A MANN é uma marca que representa estilo, atitude e personalidade.
+            Criamos peças modernas para quem quer se destacar.
+        </p>
+    </section>
+    <div id="checkout-modal" class="checkout-modal">
+    <div class="checkout-box">
+        <h2>Finalizar Compra</h2>
+        <input type="text" placeholder="Nome Completo">
+        <input type="text" placeholder="Endereço">
+        <input type="text" placeholder="Número do Cartão">
+        <button onclick="finishPurchase()">Confirmar Pedido</button>
+    </div>
+</div>
+   <script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const cartCount = document.getElementById("cart-count");
+const cartItems = document.getElementById("cart-items");
+const cartTotal = document.getElementById("cart-total");
+const buttons = document.querySelectorAll(".buy-btn");
+const clearButton = document.getElementById("clear-cart");
+const checkoutBtn = document.getElementById("checkout-btn");
+const modal = document.getElementById("checkout-modal");
+
+function updateCart() {
+    cartItems.innerHTML = "";
+    let total = 0;
+    let totalItems = 0;
+
+    cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+        totalItems += item.quantity;
+
+        const div = document.createElement("div");
+        div.classList.add("cart-item");
+
+        const name = document.createElement("p");
+        name.textContent = item.name + " - R$ " + item.price.toFixed(2);
+
+        const controls = document.createElement("div");
+        controls.classList.add("cart-controls");
+
+        const minus = document.createElement("button");
+        minus.textContent = "➖";
+        minus.onclick = () => {
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                cart.splice(index, 1);
+            }
+            updateCart();
+        };
+
+        const qty = document.createElement("span");
+        qty.textContent = item.quantity;
+
+        const plus = document.createElement("button");
+        plus.textContent = "➕";
+        plus.onclick = () => {
+            item.quantity++;
+            updateCart();
+        };
+
+        controls.appendChild(minus);
+        controls.appendChild(qty);
+        controls.appendChild(plus);
+
+        div.appendChild(name);
+        div.appendChild(controls);
+        cartItems.appendChild(div);
+    });
+
+    cartCount.textContent = totalItems;
+    cartTotal.textContent = total.toFixed(2);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        const name = button.getAttribute("data-name");
+        const price = parseFloat(button.getAttribute("data-price"));
+
+        const existing = cart.find(item => item.name === name);
+
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({ name, price, quantity: 1 });
+        }
+
+        updateCart();
+    });
+});
+
+clearButton.addEventListener("click", () => {
+    cart = [];
+    updateCart();
+});
+
+function toggleCart() {
+    document.getElementById("cart").classList.toggle("active");
+}
+
+// ===== CHECKOUT =====
+checkoutBtn.addEventListener("click", () => {
+    if (cart.length === 0) {
+        alert("Seu carrinho está vazio!");
+        return;
+    }
+    modal.style.display = "flex";
+});
+
+function finishPurchase() {
+    alert("Compra realizada com sucesso! 🎉");
+
+    cart = [];
+    updateCart();
+    modal.style.display = "none";
+}
+
+updateCart();
+</script>
+</body>
+</html>
